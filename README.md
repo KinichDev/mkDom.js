@@ -80,4 +80,74 @@ Visualiza una imagen en una pestaña emergente. Tiene las siguientes caracterís
 
 ...
 
-(Continúa con la documentación detallada de las demás funciones)
+### Función: `input(c, i, p)`
+
+Crea y devuelve una nueva etiqueta `input` con las siguientes características:
+
+- **Parámetros:**
+  - `c` (opcional): Clase de la etiqueta `input`.
+  - `i` (opcional): ID de la etiqueta `input`.
+  - `p` (opcional): Placeholder del input.
+
+- **Uso:**
+  ```javascript
+  let nuevoInput = input("miClase", "miID", "Placeholder");
+  ```
+
+---
+
+### Función: `textarea(c, i, p)`
+
+Crea y devuelve una nueva etiqueta `textarea` con las siguientes características:
+
+- **Parámetros:**
+  - `c` (opcional): Clase de la etiqueta `textarea`.
+  - `i` (opcional): ID de la etiqueta `textarea`.
+  - `p` (opcional): Placeholder del textarea.
+
+- **Uso:**
+  ```javascript
+  let nuevoTextarea = textarea("miClase", "miID", "Placeholder");
+  ```
+
+---
+
+### Función: `mkObjDatalist(n, c, i, ...elementos)`
+
+Crea un nuevo objeto `datalist` y lo añade al nodo proporcionado. Tiene las siguientes características:
+
+- **Parámetros:**
+  - `n`: Nodo al que se añadirá el objeto `datalist`.
+  - `c` (opcional): Clase del objeto `datalist`.
+  - `i` (opcional): ID del objeto `datalist`.
+  - `elementos`: Lista de elementos para el datalist.
+
+- **Uso:**
+  ```javascript
+  mkObjDatalist(document.body, "miClase", "miID", "Elemento1", "Elemento2", "Elemento3");
+  ```
+
+---
+
+### Función: `mkObjInput(nodo, c, i, type, t, p, f, s, color)`
+
+Crea un nuevo objeto `input` y lo añade al nodo proporcionado. Tiene las siguientes características:
+
+- **Parámetros:**
+  - `nodo`: Nodo al que se añadirá el objeto `input`.
+  - `c` (opcional): Clase del objeto `input`.
+  - `i` (opcional): ID del objeto `input`.
+  - `type`: Tipo del input (e.g., "text", "number").
+  - `t` (opcional): Título del input.
+  - `p` (opcional): Placeholder del input.
+  - `f` (opcional): Fuente del texto.
+  - `s` (opcional): Tamaño del texto.
+  - `color` (opcional): Color del texto.
+
+- **Uso:**
+  ```javascript
+  mkObjInput(document.body, "miClase", "miID", "text", "Título", "Placeholder", "Arial", "14px", "#000");
+  ```
+
+...
+
