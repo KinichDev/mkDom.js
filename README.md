@@ -1,5 +1,3 @@
-Por supuesto, aquí está la documentación detallada para cada función:
-
 ### Función: `div(c, i, inner)`
 
 Crea y devuelve una nueva etiqueta `div` con las siguientes características:
