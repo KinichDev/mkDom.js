@@ -151,3 +151,73 @@ Crea un nuevo objeto `input` y lo añade al nodo proporcionado. Tiene las siguie
 
 ...
 
+### Función: `mkObjInputPassword(nodo, c, i, t, p, url)`
+
+Crea un nuevo objeto `input` de tipo contraseña con un botón de visualización y lo añade al nodo proporcionado. Tiene las siguientes características:
+
+- **Parámetros:**
+  - `nodo`: Nodo al que se añadirá el objeto `input`.
+  - `c` (opcional): Clase del objeto `input`.
+  - `i` (opcional): ID del objeto `input`.
+  - `t` (opcional): Título del input.
+  - `p` (opcional): Placeholder del input.
+  - `url`: URL de la imagen del botón de visualización de contraseña.
+
+- **Uso:**
+  ```javascript
+  mkObjInputPassword(document.body, "miClase", "miID", "Título", "Placeholder", "ruta/imagen.png");
+  ```
+
+---
+
+### Función: `mkObjTextarea(nodo, c, i, t, p)`
+
+Crea un nuevo objeto `textarea` y lo añade al nodo proporcionado. Tiene las siguientes características:
+
+- **Parámetros:**
+  - `nodo`: Nodo al que se añadirá el objeto `textarea`.
+  - `c` (opcional): Clase del objeto `textarea`.
+  - `i` (opcional): ID del objeto `textarea`.
+  - `t` (opcional): Título del textarea.
+  - `p` (opcional): Placeholder del textarea.
+
+- **Uso:**
+  ```javascript
+  mkObjTextarea(document.body, "miClase", "miID", "Título", "Placeholder");
+  ```
+
+---
+
+### Función: `button(c, i, inner)`
+
+Crea y devuelve una nueva etiqueta `button` con las siguientes características:
+
+- **Parámetros:**
+  - `c` (opcional): Clase de la etiqueta `button`.
+  - `i` (opcional): ID de la etiqueta `button`.
+  - `inner` (opcional): Contenido interno (innerHTML) de la etiqueta `button`.
+
+- **Uso:**
+  ```javascript
+  let nuevoBoton = button("miClase", "miID", "Contenido Interno");
+  ```
+
+---
+
+### Función: `mkObjButton(nodo, c, i, inner, event)`
+
+Crea un nuevo objeto `button` y lo añade al nodo proporcionado. Tiene las siguientes características:
+
+- **Parámetros:**
+  - `nodo`: Nodo al que se añadirá el objeto `button`.
+  - `c` (opcional): Clase del objeto `button`.
+  - `i` (opcional): ID del objeto `button`.
+  - `inner` (opcional): Contenido interno (innerHTML) del objeto `button`.
+  - `event` (opcional): Evento asociado al botón.
+
+- **Uso:**
+  ```javascript
+  mkObjButton(document.body, "miClase", "miID", "Contenido Interno", function() { /* Código del evento */ });
+  ```
+  
+---
