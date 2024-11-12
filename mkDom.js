@@ -10,6 +10,18 @@ function div(c,i,inner) {
 
     return div
 }
+// //
+function mkObj(n,obj_class,obj_id,inner) { // nodo objHTML, clase del objeto (str), clse del id (str), inner
+
+    n?true:n=""
+    obj_class?true:obj_class=""
+    obj_id?true:obj_id=""
+    inner?true:inner=""
+
+    let obj_temp=div(obj_class,obj_id,inner)
+    n.appendChild(obj_temp)
+    return obj_temp
+}
 
 function video(c,i,s,inner) {
     c?true:c=""
@@ -96,17 +108,6 @@ function flexNone(f) {
     f.style.display="none"
     return f
 }
-function mkObj(n,obj_class,obj_id,inner) { // nodo objHTML, clase del objeto (str), clse del id (str), inner
-
-    n?true:n=""
-    obj_class?true:obj_class=""
-    obj_id?true:obj_id=""
-    inner?true:inner=""
-
-    let obj_temp=div(obj_class,obj_id,inner)
-    n.appendChild(obj_temp)
-    return obj_temp
-}
 
 function mkObjVideo(n,c,i,s,inner) {
     n?true:n=""
@@ -159,6 +160,45 @@ function mkObjImg(n,img_class,img_id,src_) {
 
     return obj_temp
 }
+
+function verImg(nodo,clase,id){ // ! VIZUALIZAR UNA IMAGEN EN UNA PESTAÑA ()
+
+    nodo=nodo||"body"
+    clase=clase||""
+    id=id||""
+
+    let temp_img = event.target
+
+    let body = document.body
+
+    nodo.style.position="relative" 
+
+    let _hipercapa = document.getElementById(id+"_hipercapa")
+    let _hipercapa_ = document.querySelector("."+clase+"_hipercapa")
+    if (_hipercapa) {_hipercapa.remove()}
+    if (_hipercapa_) {_hipercapa_.remove()}
+
+    let mk_hipercapa_img = mkObj(nodo,clase+"_hipercapa",id+"_hipercapa");mk_hipercapa_img.style.position="absolute";
+        let mk_ventana_img = mkObj(mk_hipercapa_img,clase) //document.createElement("div")
+            let mk_header_ventana_img = mkObj(mk_ventana_img,clase+"_header",id+"_header")
+                let inner_titulo_ventana = temp_img.getAttribute("src")/*.split("/").pop()*/
+            let mk_titulo_hvi = mkObj(mk_header_ventana_img,clase+"titulo_header",id+"_titulo_header",inner_titulo_ventana) /// objeto del eveneto -> atributo directorio -> formato arreglo por directorios -> ultimo elemto
+
+            let mk_btn_cerrar_ventana_img = mkObj(mk_header_ventana_img,"btn_cerrar_"+clase,"btn_cerrar_"+id,"X")
+                mk_btn_cerrar_ventana_img.style.cursor="pointer"
+    
+                mk_btn_cerrar_ventana_img.addEventListener("click",function() {
+                    history.replaceState({},document.title,window.location.href.replace(/#.*$/,"")) // ! MODIFICAR LINK DE NAVEGADOR
+                    mk_hipercapa_img.remove()
+                })
+
+        let mk_cuerpo_ventana_img = mkObj(mk_ventana_img,clase+"_cuerpo_ventana_img")
+                
+                let atributo_img = temp_img.getAttribute("src")
+            let mk_img_hipercap = mkObjImg(mk_cuerpo_ventana_img,"img_"+clase,"img_"+id,atributo_img)
+            history.pushState({},"",`#${inner_titulo_ventana}`) // ! MODIFICAR LINK DE NAVEGADOR
+}
+
 
 function mkObjInput(nodo,c,i,type,t,p){ // nodo, clase, id, tipo, titulo input, placeholder
     nodo?true:nodo=""
