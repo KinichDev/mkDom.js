@@ -1,8 +1,178 @@
-function div(c,i,inner) { 
-    c?true:c=""
-    i?true:i=""
-    inner?true:inner=""
+// mkDomer ----'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'
+// mkDomer /              ##### ##
+// mkDomer #/            /#####  /##
+// mkDomer ##          //    /  / ###
+// mkDomer ##         /     /  /   ###
+// mkDomer ##              /  /     ###
+// mkDomer ### /### /###    ##  /##        ## ##      ##    /###    ### /### /###       /##    ###  /###
+// mkDomer ##/ ###/ /##  / ## / ###       ## ##      ##   / ###  /  ##/ ###/ /##  /   / ###    ###/ #### /
+// mkDomer ##  ###/ ###/  ##/   /        ## ##      ##  /   ###/    ##  ###/ ###/   /   ###    ##   ###/
+// mkDomer ##   ##   ##   ##   /         ## ##      ## ##    ##     ##   ##   ##   ##    ###   ##
+// mkDomer ##   ##   ##   ##  /          ## ##      ## ##    ##     ##   ##   ##   ########    ##
+// mkDomer ##   ##   ##   ## ##          #  ##      ## ##    ##     ##   ##   ##   #######     ##
+// mkDomer ##   ##   ##   ######            /       /  ##    ##     ##   ##   ##   ##          ##
+// mkDomer ##   ##   ##   ##  ###      /###/       /   ##    ##     ##   ##   ##   ####    /   ##
+// mkDomer ###  ###  ###  ##   ### /  /   ########/     ######      ###  ###  ###   ######/    ###
+// mkDomer ###  ###  ###  ##   ##/  /       ####        ####        ###  ###  ###   #####      ###
+// mkDomer            #
+// mkDomer             ##
 
+// Extiende el prototipo de HTMLElement para agregar funciones personalizadas
+
+// Método para ocultar un elemento con una animación de desvanecimiento
+HTMLElement.prototype.displayNone = function () {
+    this.style.animation = "fadeOut 0.5s forwards"; // Agrega una animación de desvanecimiento
+    setTimeout(() => {
+        this.style.display = "none"; // Cambia el display a "none" después de la animación
+        this.style.animation = ""; // Limpia la propiedad de animación
+        return this;
+    }, 1000); // Tiempo suficiente para que la animación termine
+};
+
+// Método para mostrar un elemento con una animación de aparición en modo "flex"
+HTMLElement.prototype.displayFlex = function () {
+    this.style.animation = "fadeIn 0.5s forwards"; // Agrega una animación de aparición
+    setTimeout(() => {
+        this.style.display = "flex"; // Cambia el display a "flex" después de la animación
+        this.style.animation = ""; // Limpia la propiedad de animación
+        return this;
+    }, 1000); // Tiempo suficiente para que la animación termine
+};
+
+// Método para aplicar una animación de entrada cinematográfica lenta
+HTMLElement.prototype.entradaSuave = function () {
+    if (!(this instanceof HTMLElement)) {
+        console.error("Este método solo se puede usar en elementos HTML.");
+        return;
+    }
+
+    // Define los estilos de animación como una regla CSS
+    let animacionEstilos = `
+        @keyframes tomasCinematicasLentas {
+            0% {
+                background-color: black;
+                filter: brightness(0.2) blur(10px);
+                transform: scale(1) translate(0, 0);
+            }
+            25% {
+                background-color: black;
+                filter: brightness(0.4) blur(8px);
+                transform: scale(1.2) translate(10%, -10%);
+            }
+            50% {
+                background-color: black;
+                filter: brightness(0.6) blur(6px);
+                transform: scale(1.3) translate(20%, -12%);
+            }
+            75% {
+                background-color: black;
+                filter: brightness(0.8) blur(3px);
+                transform: scale(1.2) translate(10%, 10%);
+            }
+            100% {
+                background-color: transparent;
+                filter: brightness(1) blur(0);
+                transform: scale(1) translate(0, 0);
+            }
+        }
+    `;
+
+    // Inserta la animación en el documento si aún no existe
+    if (!document.querySelector("style#tomasCinematicasLentas")) {
+        let estilo = document.createElement("style");
+        estilo.id = "tomasCinematicasLentas";
+        estilo.textContent = animacionEstilos;
+        document.head.appendChild(estilo);
+    }
+
+    // Aplica la animación al elemento
+    this.style.animation = "tomasCinematicasLentas 60s ease-in-out infinite";
+};
+
+// Método para ejecutar un callback cuando el elemento entra en el viewport
+HTMLElement.prototype.onScrollIntoView = function (callback, options = { root: null, threshold: 0.1 }) {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function.');
+    }
+
+    // Crea un observador para detectar la intersección del elemento
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            callback(entry); // Llama al callback con la entrada correspondiente
+        });
+    }, options);
+
+    // Observa el elemento actual
+    observer.observe(this);
+
+    // Devuelve el observador para permitir su desconexión manual
+    return observer;
+};
+
+// Método para calcular el porcentaje de scroll dentro de un elemento
+HTMLElement.prototype.nivelScroll = function () {
+    let scrollTop = this.scrollTop; // Distancia desde la parte superior
+    let scrollHeight = this.scrollHeight; // Altura total del contenido
+    let clientHeight = this.clientHeight; // Altura visible del contenedor
+
+    // Calcula el porcentaje de scroll
+    let porcentajeScroll = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    return porcentajeScroll.toFixed(2); // Retorna el porcentaje con dos decimales
+};
+
+// Método para eliminar un elemento con una animación de desvanecimiento
+HTMLElement.prototype.removeElement = function () {
+    this.style.animation = "fadeOut 0.3s forwards"; // Aplica una animación de desvanecimiento
+
+    setTimeout(() => {
+        if (this.parentNode) {
+            this.remove(); // Elimina el elemento después de la animación
+        }
+    }, 1000); // Tiempo suficiente para que la animación termine
+};
+
+// Método para alternar entre display "flex" y "none"
+HTMLElement.prototype.toggleDisplayFlexNone = function () {
+    if (!(this instanceof HTMLElement)) {
+        console.error("Esta función solo se puede llamar con objetos HTML.");
+        return;
+    }
+
+    // Obtén el estilo actual del elemento
+    let currentDisplay = getComputedStyle(this).display;
+
+    // Alterna entre "flex" y "none"
+    if (currentDisplay === "none") {
+        this.style.display = "flex";
+    } else if (currentDisplay === "flex") {
+        this.style.display = "none";
+    } else {
+        console.warn("Este elemento no cuenta con los estilos necesarios:", currentDisplay);
+    }
+};
+
+// mkDomer ----'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'
+// mkDomer /              ##### ##
+// mkDomer #/            /#####  /##
+// mkDomer ##          //    /  / ###
+// mkDomer ##         /     /  /   ###
+// mkDomer ##              /  /     ###
+// mkDomer ### /### /###    ##  /##        ## ##      ##    /###    ### /### /###       /##    ###  /###
+// mkDomer ##/ ###/ /##  / ## / ###       ## ##      ##   / ###  /  ##/ ###/ /##  /   / ###    ###/ #### /
+// mkDomer ##  ###/ ###/  ##/   /        ## ##      ##  /   ###/    ##  ###/ ###/   /   ###    ##   ###/
+// mkDomer ##   ##   ##   ##   /         ## ##      ## ##    ##     ##   ##   ##   ##    ###   ##
+// mkDomer ##   ##   ##   ##  /          ## ##      ## ##    ##     ##   ##   ##   ########    ##
+// mkDomer ##   ##   ##   ## ##          #  ##      ## ##    ##     ##   ##   ##   #######     ##
+// mkDomer ##   ##   ##   ######            /       /  ##    ##     ##   ##   ##   ##          ##
+// mkDomer ##   ##   ##   ##  ###      /###/       /   ##    ##     ##   ##   ##   ####    /   ##
+// mkDomer ###  ###  ###  ##   ### /  /   ########/     ######      ###  ###  ###   ######/    ###
+// mkDomer ###  ###  ###  ##   ##/  /       ####        ####        ###  ###  ###   #####      ###
+// mkDomer            #
+// mkDomer             ##
+
+
+function div(c,i,inner) { // ! CREAR UNA ETIQUETA DIV (clase, id, inner)
+    c?true:c="";i?true:i="";inner?true:inner="";
     let div = document.createElement("div")
     c=""?true:div.setAttribute("class",c)
     i=""?true:div.setAttribute("id",i)
@@ -10,54 +180,30 @@ function div(c,i,inner) {
 
     return div
 }
-// //
-function mkObj(n,obj_class,obj_id,inner) { // nodo objHTML, clase del objeto (str), clse del id (str), inner
 
-    n?true:n=""
-    obj_class?true:obj_class=""
-    obj_id?true:obj_id=""
-    inner?true:inner=""
+
+function mkObj(n,obj_class,obj_id,inner) {  // ! CREAR UN OBJETO DIV (nodo, clase, id, inner)
+    n?true:n="";obj_class?true:obj_class="";obj_id?true:obj_id="";inner?true:inner="";
 
     let obj_temp=div(obj_class,obj_id,inner)
     n.appendChild(obj_temp)
+
     return obj_temp
 }
 
-function video(c,i,s,inner) {
-    c?true:c=""
-    i?true:i=""
-    s?true:s=""
-    inner?true:inner=""
-
-    let video = document.createElement("video")
-    c=""?true:video.setAttribute("class",c)
-    i=""?true:video.setAttribute("id",i)
-    i=""?true:video.setAttribute("src",s)
-
-    return video
+function mkObjObj(n,obj_class,obj_id,inner) {  // ! CREAR UN OBJETO DIV (nodo, clase, id, inner)
+    n?true:n="";obj_class?true:obj_class="";obj_id?true:obj_id="";inner?true:inner="";
+    let obj_temp=mkObj(n,"c_"+obj_class,"c_"+obj_id)
+    let obj_temp_=mkObj(obj_temp,obj_class,obj_id)
+    console.log()
+    return obj_temp
 }
 
-function videoLoop(c,i,s,inner) {
-    c?true:c=""
-    i?true:i=""
-    s?true:s=""
-    inner?true:inner=""
+// TODO IMAGES ///////////////////////////////////
 
-    let video = document.createElement("video")
-    c=""?true:video.setAttribute("class",c)
-    i=""?true:video.setAttribute("id",i)
-    i=""?true:video.setAttribute("src",s)
-    video.autoplay = true;
-    video.loop = true;  
-    video.muted = true;  
+function img(c,i,src) { // ! CREAR UNA ETIQUETA IMG (clase, id, inner)
+    c?true:c="";i?true:i="";src?true:src="";
 
-    return video
-}
-
-function img(c,i,src) {
-    c?true:c=""
-    i?true:i=""
-    src?true:src=""
     let img = document.createElement("img")
     c=""?true:img.setAttribute("class",c)
     i==""?true:img.setAttribute("id",i)
@@ -66,87 +212,10 @@ function img(c,i,src) {
     return img
 }
 
-function input(c,i,p) {
-    c?true:c=""
-    i?true:i=""
-    p?true:p=""
-    let input = document.createElement("input")
-    c=""?true:input.setAttribute("class",c)
-    i=""?true:input.setAttribute("id",i)
-    p=""?true:input.setAttribute("placeholder",p)
-    return input
-}
+function mkObjImg(n,img_class,img_id,src_) { // ! CREAR UN OBJETO IMG (nodo, clase, id, recurso imagen)
+    n?true:n="";img_class?true:img_class="";img_id?true:img_id="";src_?true:src_="";
 
-function textarea(c,i,p) {
-    c?true:c=""
-    i?true:i=""
-    p?true:p=""
-    let textarea = document.createElement("textarea")
-    c=""?true:textarea.setAttribute("class",c)
-    i=""?true:textarea.setAttribute("id",i)
-    p=""?true:textarea.setAttribute("placeholder",p)
-    return textarea
-}
-
-function button(c,i,inner) {
-    c?true:c=""
-    i?true:i=""
-    inner?true:inner=""
-    let button = document.createElement("button")
-    c=""?true:button.setAttribute("class",c)
-    i=""?true:button.setAttribute("id",i)
-    inner=""?true:button.innerHTML=inner
-
-    return button
-}
-/////////
-function flex(f){
-    f.style.display="flex"
-    return f
-}
-function flexNone(f) {
-    f.style.display="none"
-    return f
-}
-
-function mkObjVideo(n,c,i,s,inner) {
-    n?true:n=""
-    c?true:c=""
-    i?true:i=""
-    s?true:s=""
-    inner?true:inner=""
-
-    let obj_temp = mkObj(n,"cont_"+c,"cont_"+i)
-
-        let video_temp = video(c,i,s)
-    obj_temp.appendChild(video_temp)
-
-    return obj_temp
-}
-
-function mkObjVideoLoop(n,c,i,s,inner) {
-    n?true:n=""
-    c?true:c=""
-    i?true:i=""
-    s?true:s=""
-    inner?true:inner=""
-
-    let obj_temp = mkObj(n,"cont_"+c,"cont_"+i)
-
-        let video_temp = videoLoop(c,i,s)
-    obj_temp.appendChild(video_temp)
-
-    return obj_temp
-}
-
-function mkObjImg(n,img_class,img_id,src_) {
-    n?true:n=""
-    img_class?true:img_class=""
-    img_id?true:img_id=""
-    src_?true:src_=""
-
-    img_class?cont_img_class="cont_"+img_class:cont_img_class=""
-    img_id?cont_img_id="cont_"+img_id:cont_img_id=""
+    img_class?cont_img_class="cont_"+img_class:cont_img_class="";img_id?cont_img_id="cont_"+img_id:cont_img_id="";
 
 
     let obj_temp=div(cont_img_class,cont_img_id)
@@ -162,25 +231,26 @@ function mkObjImg(n,img_class,img_id,src_) {
 }
 
 function verImg(nodo,clase,id){ // ! VIZUALIZAR UNA IMAGEN EN UNA PESTAÑA ()
-
-    nodo=nodo||"body"
-    clase=clase||""
-    id=id||""
+    nodo=nodo||"body";clase=clase||"";id=id||"";
 
     let temp_img = event.target
 
     let body = document.body
 
-    nodo.style.position="relative" 
+    nodo.style.position="relative" // ! ASIGNAR PROPIEDAD RELATIVE AL NODO PARA PERMITIR UBICACION ABSOLUTA DE LA IMAGEN
 
+        // ! SI EXISTE LA VENTANA CON LA IMGEN SE ELIMINA PARA VOLVER A CREAR
     let _hipercapa = document.getElementById(id+"_hipercapa")
     let _hipercapa_ = document.querySelector("."+clase+"_hipercapa")
     if (_hipercapa) {_hipercapa.remove()}
     if (_hipercapa_) {_hipercapa_.remove()}
 
+    // ? CREACION DE HIPERCAPA
     let mk_hipercapa_img = mkObj(nodo,clase+"_hipercapa",id+"_hipercapa");mk_hipercapa_img.style.position="absolute";
         let mk_ventana_img = mkObj(mk_hipercapa_img,clase) //document.createElement("div")
             let mk_header_ventana_img = mkObj(mk_ventana_img,clase+"_header",id+"_header")
+
+                    // ? INNER TITULO
                 let inner_titulo_ventana = temp_img.getAttribute("src")/*.split("/").pop()*/
             let mk_titulo_hvi = mkObj(mk_header_ventana_img,clase+"titulo_header",id+"_titulo_header",inner_titulo_ventana) /// objeto del eveneto -> atributo directorio -> formato arreglo por directorios -> ultimo elemto
 
@@ -199,80 +269,93 @@ function verImg(nodo,clase,id){ // ! VIZUALIZAR UNA IMAGEN EN UNA PESTAÑA ()
             history.pushState({},"",`#${inner_titulo_ventana}`) // ! MODIFICAR LINK DE NAVEGADOR
 }
 
+// TODO  INPUTS ///////////////////////////////////
 
-function mkObjInput(nodo,c,i,type,t,p){ // nodo, clase, id, tipo, titulo input, placeholder
-    nodo?true:nodo=""
-    c?true:c=""
-    i?true:i=""
-    t?true:t=""
-    p?true:p=""
-    c?cont_clase="cont_input_"+c:cont_clase=""
-    i?cont_id="cont_input_"+i:cont_id=""
-    c?cont_titulo_clase="cont_tittle_"+c:cont_titulo_clase=""
-    i?cont_titulo_id="cont_tittle_"+i:cont_titulo_id=""
-    c?titulo_clase="tittle_"+c:titulo_clase=""
-    i?titulo_id="tittle_"+i:titulo_id=""
-    c?nodo_cont_input_class="nodo_cont_input_"+c:nodo_cont_input_class=""
-    i?nodo_cont_input_id="nodo_cont_input_"+i:nodo_cont_input_id=""
-    c?cont_input_clase="cont_in_"+c:cont_input_clase=""
-    i?cont_input_id="cont_in_"+i:cont_input_id=""
-    c?input_clase="in_"+c:input_clase=""
-    i?input_id="in_"+i:input_id=""
-    input_placeholder=p
+function input(c,i,p) { // ! CREAR UNA ETIQUETA INPUT (clase, id, placeholder)
+    c?true:c="";i?true:i="";p?true:p="";
+    
+    let input = document.createElement("input")
 
-    let obj_temp = div(c,i)
-    nodo.appendChild(obj_temp)
-        let cont_temp = div(cont_clase,cont_id)
-        obj_temp.appendChild(cont_temp)
-            let cont_titulo = div(cont_titulo_clase,cont_titulo_id)
-            cont_temp.appendChild(cont_titulo)
+    c=""?true:input.setAttribute("class",c)
+    i=""?true:input.setAttribute("id",i)
+    p=""?true:input.setAttribute("placeholder",p)
+    return input
+}
+
+function textarea(c,i,p) { // ! CREAR UNA ETIQUETA TEXTAREA (clase, id, placeholder)
+    c?true:c="";i?true:i="";p?true:p="";
+
+    let textarea = document.createElement("textarea")
+    c=""?true:textarea.setAttribute("class",c)
+    i=""?true:textarea.setAttribute("id",i)
+    p=""?true:textarea.setAttribute("placeholder",p)
+
+    return textarea
+}
+
+function mkObjDatalist(n,c,i,...elementos){ // compatibilidad con objetos
+    n?n:""
+    c?c:""
+    i?i:""
+    elementos?elementos:""
+
+    // let obj_temp = mkObj(n,"cont_"+c,"cont_"+i)
+
+    let input_datalist = n.querySelector("input")
+    input_datalist.setAttribute("list",i)
+
+    let data_list_temp = document.createElement("datalist")
+    data_list_temp.setAttribute("class",c)
+    data_list_temp.setAttribute("id",i)
+
+    for (let j = 0; j < elementos.length; j++) {
+        let option_temp = document.createElement("option")
+        option_temp.setAttribute("value",elementos[j])
+        data_list_temp.appendChild(option_temp)
+    }
+
+    n.appendChild(data_list_temp)
+    return data_list_temp
+}
+
+
+function mkObjInput(nodo,c,i,type,t,p,f,s,color){ // ! CREAR UN OBJETO INPUT (clase, id, placeholder, type, titulo_obj, placeholder, fuente, tamaño, color del texto)
+    nodo?true:nodo="";c?true:c="";i?true:i="";t?true:t="";p?true:p="";f?true:f="";s?true:s="";color?true:color="";
+    c?cont_clase="cont_input_"+c:cont_clase="";i?cont_id="cont_input_"+i:cont_id="";c?cont_titulo_clase="cont_tittle_"+c:cont_titulo_clase="";
+    i?cont_titulo_id="cont_tittle_"+i:cont_titulo_id="";c?titulo_clase="tittle_"+c:titulo_clase="";i?titulo_id="tittle_"+i:titulo_id="";
+    c?nodo_cont_input_class="nodo_cont_input_"+c:nodo_cont_input_class="";i?nodo_cont_input_id="nodo_cont_input_"+i:nodo_cont_input_id="";
+    c?cont_input_clase="cont_in_"+c:cont_input_clase="";i?cont_input_id="cont_in_"+i:cont_input_id="";c?input_clase="in_"+c:input_clase="";
+    i?input_id="in_"+i:input_id="";input_placeholder=p;
+
+    let obj_temp = mkObj(nodo,c,i)
+
+        let cont_temp = mkObj(obj_temp,cont_clase,cont_id)
+            let cont_titulo = mkObj(cont_temp,cont_titulo_clase,cont_titulo_id)
                 let titulo_temp = mkText(cont_titulo,titulo_clase,titulo_id,t)
 
-            let nodo_cont_input = div(nodo_cont_input_class,nodo_cont_input_id)
-            cont_temp.appendChild(nodo_cont_input)
-                let cont_input = div(cont_input_clase,cont_input_id)
-                nodo_cont_input.appendChild(cont_input)
+            let nodo_cont_input = mkObj(cont_temp,nodo_cont_input_class,nodo_cont_input_id)
+                let cont_input = mkObj(nodo_cont_input,cont_input_clase,cont_input_id)
                     let input_temp = input(input_clase,input_id,p)
                     input_temp.setAttribute("type",type)
                     cont_input.appendChild(input_temp)
 
+                        obj_temp.addEventListener("mouseup",function () {
+                            input_temp.focus()
+                        })
+
     return obj_temp
 }
 
-function mkObjInputPassword(nodo,c,i,t,p,url){ //nono clase id titulo placeholder
-    nodo?true:nodo=""
-    c?true:c=""
-    i?true:i=""
-    t?true:t=""
-    p?true:p=""
-
-
-    c?cont_clase="cont_input_"+c:cont_clase=""
-    i?cont_id="cont_input_"+i:cont_id=""
-
-
-    c?cont_titulo_clase="cont_tittle_"+c:cont_titulo_clase=""
-    i?cont_titulo_id="cont_tittle_"+i:cont_titulo_id=""
-
-    c?titulo_clase="tittle_"+c:titulo_clase=""
-    i?titulo_id="tittle_"+i:titulo_id=""
-
-    c?nodo_cont_input_class="nodo_cont_input_"+c:nodo_cont_input_class=""
-    i?nodo_cont_input_id="nodo_cont_input_"+i:nodo_cont_input_id=""
-
-    c?cont_input_clase="cont_in_"+c:cont_input_clase=""
-    i?cont_input_id="cont_in_"+i:cont_input_id=""
-
-    c?input_clase="in_"+c:input_clase=""
-    i?input_id="in_"+i:input_id=""
-
-    c?img_ver_pass_clase="ver_pass_"+c:img_ver_pass_clase=""
-    i?img_ver_pass_id="ver_pass_"+i:img_ver_pass_id=""
+function mkObjInputPassword(nodo,c,i,t,p,url){// ! CREAR UN OBJETO INPUT (clase, id, placeholder, titulo, placeholder, directorio_img)
+    nodo?true:nodo="";c?true:c="";i?true:i="";t?true:t="";p?true:p="";
+    c?cont_clase="cont_input_"+c:cont_clase="";i?cont_id="cont_input_"+i:cont_id="";c?cont_titulo_clase="cont_tittle_"+c:cont_titulo_clase="";
+    i?cont_titulo_id="cont_tittle_"+i:cont_titulo_id="";c?titulo_clase="tittle_"+c:titulo_clase="";i?titulo_id="tittle_"+i:titulo_id="";
+    c?nodo_cont_input_class="nodo_cont_input_"+c:nodo_cont_input_class="";i?nodo_cont_input_id="nodo_cont_input_"+i:nodo_cont_input_id="";
+    c?cont_input_clase="cont_in_"+c:cont_input_clase="";i?cont_input_id="cont_in_"+i:cont_input_id="";c?input_clase="in_"+c:input_clase="";
+    i?input_id="in_"+i:input_id="";c?img_ver_pass_clase="ver_pass_"+c:img_ver_pass_clase="";i?img_ver_pass_id="ver_pass_"+i:img_ver_pass_id="";
+    c?ver_pass_clase="ver_pass_"+c:ver_pass_clase="";i?ver_pass_id="ver_pass_"+i:ver_pass_id="";
 
     input_placeholder=p
-
-    c?ver_pass_clase="ver_pass_"+c:ver_pass_clase=""
-    i?ver_pass_id="ver_pass_"+i:ver_pass_id=""
 
     let obj_temp = div(c,i)
     nodo.appendChild(obj_temp)
@@ -294,6 +377,7 @@ function mkObjInputPassword(nodo,c,i,t,p,url){ //nono clase id titulo placeholde
             obj_cont_input.appendChild(cont_input)
 
                 let input_temp = input(input_clase,input_id,p)
+                input_temp.style.padding="6px"
                 input_temp.setAttribute("type","password")
                 cont_input.appendChild(input_temp)
 
@@ -326,28 +410,22 @@ function mkObjInputPassword(nodo,c,i,t,p,url){ //nono clase id titulo placeholde
                         input_temp.type = "password"
                     }
                 })
+                console.log(obj_temp)
+    obj_temp.addEventListener("mouseup",function () {
+        obj_temp.querySelector("input").focus()
+    })
 
     return obj_temp
 }
 
-function mkObjTextarea(nodo,c,i,t,p){ // nodo, clase, id, tipo, titulo textarea, placeholder
-    nodo?true:nodo=""
-    c?true:c=""
-    i?true:i=""
-    t?true:t=""
-    p?true:p=""
-    c?cont_clase="cont_textarea_"+c:cont_clase=""
-    i?cont_id="cont_textarea_"+i:cont_id=""
-    c?cont_titulo_clase="cont_tittle_"+c:cont_titulo_clase=""
-    i?cont_titulo_id="cont_tittle_"+i:cont_titulo_id=""
-    c?titulo_clase="tittle_"+c:titulo_clase=""
-    i?titulo_id="tittle_"+i:titulo_id=""
-    c?nodo_cont_textarea_class="nodo_cont_textarea_"+c:nodo_cont_textarea_class=""
-    i?nodo_cont_textarea_id="nodo_cont_textarea_"+i:nodo_cont_textarea_id=""
-    c?cont_textarea_clase="cont_in_"+c:cont_textarea_clase=""
-    i?cont_textarea_id="cont_in_"+i:cont_textarea_id=""
-    c?textarea_clase="in_"+c:textarea_clase=""
-    i?textarea_id="in_"+i:textarea_id=""
+function mkObjTextarea(nodo,c,i,t,p){ // ! CREAR UN OBJETO TEXTAREA (clase, id, titulo_obj, placeholder)
+    nodo?true:nodo="";c?true:c="";i?true:i="";t?true:t="";p?true:p="";c?cont_clase="cont_textarea_"+c:cont_clase="";
+    i?cont_id="cont_textarea_"+i:cont_id="";c?cont_titulo_clase="cont_tittle_"+c:cont_titulo_clase="";
+    i?cont_titulo_id="cont_tittle_"+i:cont_titulo_id="";c?titulo_clase="tittle_"+c:titulo_clase="";
+    i?titulo_id="tittle_"+i:titulo_id="";c?nodo_cont_textarea_class="nodo_cont_textarea_"+c:nodo_cont_textarea_class="";
+    i?nodo_cont_textarea_id="nodo_cont_textarea_"+i:nodo_cont_textarea_id="";c?cont_textarea_clase="cont_in_"+c:cont_textarea_clase="";
+    i?cont_textarea_id="cont_in_"+i:cont_textarea_id="";c?textarea_clase="in_"+c:textarea_clase="";i?textarea_id="in_"+i:textarea_id="";
+
     textarea_placeholder=p
 
     let obj_temp = div(c,i)
@@ -368,11 +446,21 @@ function mkObjTextarea(nodo,c,i,t,p){ // nodo, clase, id, tipo, titulo textarea,
     return obj_temp
 }
 
-function mkObjButton(nodo,c,i,inner) {
-    nodo?true:nodo=""
-    c?true:c=""
-    i?true:i=""
-    inner?true:inner=""
+// TODO  BUTTON ///////////////////////////////////
+
+function button(c,i,inner) { // ! CREAR UNA ETIQUETA BUTTON (clase, id, inner)
+    c?true:c="";i?true:i="";inner?true:inner="";
+
+    let button = document.createElement("button")
+    c=""?true:button.setAttribute("class",c)
+    i=""?true:button.setAttribute("id",i)
+    inner=""?true:button.innerHTML=inner
+
+    return button
+}
+
+function mkObjButton(nodo,c,i,inner,event) { // ! CREAR UN OBJ BUTTON (nodo, clase, id, inner)
+    nodo?true:nodo="";c?true:c="";i?true:i="";inner?true:inner="";
 
     let btn_temp = button(c,i,inner)
 
@@ -390,12 +478,65 @@ function mkObjButton(nodo,c,i,inner) {
     return obj_temp
 }
 
-function mostrarPestaña(x,c) { 
-    let pestañas_array = c.querySelectorAll(".pestaña")
-    for (let i = 0; i < pestañas_array.length; i++) {
-        pestañas_array[i].style.display="none"
+// TODO DISPLAY ///////////////////////////////////
+
+function flex(f){ // ! DISPLAY FLEX
+    f.style.display="flex"
+    return f
+}
+
+function flexNone(f) { // ! DISPLAY NONE
+    f.style.display="none"
+    return f
+}
+
+// TODO INPUT ///////////////////////////////////
+
+    // ACTUALIZADO DE BIBLIOTECA VALIDACION A9
+
+                    // OPTIMIZACIONES:
+                        // optimizaciones: [div() remplazados por mkObj()]
+
+                            // MODIFICACIONES:
+                                // modificaciones: [CAMBIAR NOMBRE DE "validarStr()" a "validarInputA9()"]
+
+function validarInputA9(x,texto_aviso) { // ! (elemento_input,texto_aviso)
+
+    let ex = /^[a-zA-Z0-9/s']+$/
+    let nodo = x.parentNode
+    let c = x.getAttribute("class")
+    let i = x.getAttribute("id")
+
+    if (document.getElementById("aviso_formulario_"+i)) {
+        document.getElementById("aviso_formulario_"+i).remove()
     }
-    x.style.display="flex"
+
+    if (x.value=="") {
+        document.getElementById("aviso_formulario_"+i).remove()
+    }
+
+    if (!ex.test(x.value)) {
+        let aviso_formulario = div("aviso_formulario_"+c,"aviso_formulario_"+i,texto_aviso)
+        nodo.appendChild(aviso_formulario)
+        x.style.border="none"
+        x.style.borderBottom="solid 1px red"
+    } else {
+        x.style.border="solid 1px var(--colorBorderAviso)"
+    }
+}
+
+// Actualizado: [SI] | Acutalizado de: [mkDomer/controlador/bibliotecaPruebas.js]
+    // Modificaciones :
+        // Modificaciones :
+function vistaToggle(element) { // ! VERIFICAR LA VARIABLE DE ESTILO DISPLAY PARA INTERCAMBIAR ENTRE FLEX Y NONE
+    console.log(window.getComputedStyle(element).display)
+    let obj_temp = window.getComputedStyle(element).display
+    if (obj_temp==="flex") {
+        obj.style.display="none"
+    } else {
+        obj.style.display="flex"
+    }
+
 }
 
 function checkAndDeleteId(x) {
@@ -404,17 +545,19 @@ function checkAndDeleteId(x) {
     }
 }
 
-function confirmarPass(x,y){
+// gest // //
+// Actualizado: [NO] | Acutalizando en: [Sin subcarpeta de optimizacion]
+function confirmarPass(x,y){ // ! AÑADIR DOS INPUTS, VALIDAR SI SON IGUALES Y MODIFICAR EL BORDE DE SUS NODOS
     let nodo_x = x.parentNode
     let nodo_y = y.parentNode
 
 
-    if (x.value==y.value) {
+    if (x.value==y.value) { // gest
         checkAndDeleteId("aviso_formulario_contraseña")
         checkAndDeleteId("aviso_formulario_confirmar_contraseña")
 
-        x.style.border="solid 1px #10101088"
-        y.style.border="solid 1px #10101088"
+        x.style.border="solid 1px #10101088" // GEST MODIFICAR COLOR A UNA VARIABLE CSS PERSONALIZADA PARA FACILITAR SU USO
+        y.style.border="solid 1px #10101088" // GEST MODIFICAR COLOR A UNA VARIABLE CSS PERSONALIZADA PARA FACILITAR SU USO
     } else {
         checkAndDeleteId("aviso_formulario_contraseña")
         checkAndDeleteId("aviso_formulario_confirmar_contraseña")
@@ -425,13 +568,15 @@ function confirmarPass(x,y){
         nodo_y.appendChild(aviso_y)
 
         x.style.border="none"
-        x.style.borderBottom="solid 1px red"
+        x.style.borderBottom="solid 1px red" // GEST MODIFICAR COLOR A UNA VARIABLE CSS PERSONALIZADA PARA FACILITAR SU USO
         y.style.border="none"
-        y.style.borderBottom="solid 1px red"
+        y.style.borderBottom="solid 1px red" // GEST MODIFICAR COLOR A UNA VARIABLE CSS PERSONALIZADA PARA FACILITAR SU USO
     }
 }
 
-function mkText(n,c,i,inner) {
+// TODO TEXTO ////////////////////////
+
+function mkText(n,c,i,inner) { // ! GENERAR EL CONTENIDO  [<div><p>  </p></div>] 
     n = n || ""
     c = c || ""
     i = i || ""
@@ -453,37 +598,48 @@ function mkText(n,c,i,inner) {
 
 }
 
-function mkTargetBlank(n,c,i,url,inner) {
+function mkTextList(n,c,i,...inner) { // ! GENERAR EL CONTENIDO  [<div><p>  </p></div>] 
     n = n || ""
     c = c || ""
     i = i || ""
-    url = url || ""
     inner = inner || ""
-    let obj_temp = document.createElement("a")
-    obj_temp.setAttribute("target","_blank")
-    obj_temp.setAttribute("class",c)
-    obj_temp.setAttribute("id",i)
-    obj_temp.setAttribute("href",url)
-    obj_temp.innerHTML=inner
+
+    c==""?c_c="":c_c="cont_"+c
+    i==""?c_i="":c_i="cont_"+i
+
+    let obj_temp = div(c_c,c_i)
     n.appendChild(obj_temp)
+
+    let p_temp = document.createElement("p")
+    p_temp.setAttribute("class",c)
+    p_temp.setAttribute("id",i)
+    for (let j = 0; j < inner.length; j++) {
+        let element = inner[j];
+        // ! console.log(element)
+        let sub_text = mkText(obj_temp,"sub_text_"+c,"sub_text_"+i+"_"+j,element)
+        // ! console.log(sub_text)
+            
+    }
+
     return obj_temp
+
 }
 
-function mathConcat(input_element) {
-    let math_simbols = /[+\-*\/]/;
-
-    input_element.addEventListener("blur", function () {
-        if (math_simbols.test(input_element.value)) {
-            input_element.value = eval(input_element.value);
-        }
-    });
-
-    return input_element;
-}       
-
 function placerMenu(btn,menu) {
+    menu.style.display="none"
     let timer;
     btn.addEventListener("mouseenter", function(x) {
+        menu.style.display = "flex"; // Mostrar el elemento "menu" con estilo flex
+        clearTimeout(timer); // Limpiar el temporizador existente
+        // Añadir un evento "mouseup" al documento
+        document.addEventListener("mouseup", function(n) {
+            if (!menu.contains(n.target)) {
+                menu.style.display = "none"; // Ocultar "menu" si el clic no está dentro de él
+            }
+        });
+    });
+
+    menu.addEventListener("mouseenter", function(x) {
         menu.style.display = "flex"; // Mostrar el elemento "menu" con estilo flex
         clearTimeout(timer); // Limpiar el temporizador existente
         // Añadir un evento "mouseup" al documento
@@ -513,143 +669,14 @@ function placerMenu(btn,menu) {
             menu.style.display = "none"; // Ocultar el elemento "menu"
         }, 1100);
     });
+
+    menu.addEventListener("mouseleave", function(x) {
+        // Establecer un temporizador para ocultar "menu" después de 1100 ms (1.1 segundos)
+        timer = setTimeout(function() {
+            menu.style.display = "none"; // Ocultar el elemento "menu"
+        }, 1100);
+    });
 }
-
-function mkAviso(node,c,i,text) {
-    node?true:""
-    c?true:""
-    i?true:""
-    text?true:""
-    let obj_temp = mkText(node,c,i,text)
-    obj_temp.style.color="red"
-
-    return obj_temp
-}
-
-
-function checkUser(url,callback) {
-    let peticion = new XMLHttpRequest()
-    peticion.open("GET",url)
-    peticion.send()
-    peticion.onreadystatechange=function() {
-        if (peticion.readyState==4&&peticion.status==200) {
-            let res = peticion.response
-            callback(res)
-        }
-    }
-}
-
-function mkObjDatalist(n,c,i,...elementos){ // compatibilidad con objetos
-    n?n:""
-    c?c:""
-    i?i:""
-    elementos?elementos:""
-
-    // let obj_temp = mkObj(n,"cont_"+c,"cont_"+i)
-
-    let input_datalist = n.querySelector("input")
-    input_datalist.setAttribute("list",i)
-
-    let data_list_temp = document.createElement("datalist")
-    data_list_temp.setAttribute("class",c)
-    data_list_temp.setAttribute("id",i)
-
-    for (let j = 0; j < elementos.length; j++) {
-        let option_temp = document.createElement("option")
-        option_temp.setAttribute("value",elementos[j])
-        data_list_temp.appendChild(option_temp)
-    }
-
-    n.appendChild(data_list_temp)
-    return data_list_temp
-}
-
-function mkObjDatalistTextarea(n,c,i,...elementos){ // compatibilidad con objetos
-    n?n:""
-    c?c:""
-    i?i:""
-    elementos?elementos:""
-
-    // let obj_temp = mkObj(n,"cont_"+c,"cont_"+i)
-
-    let input_datalist = n.querySelector("textarea")
-    input_datalist.setAttribute("list",i)
-
-    let data_list_temp = document.createElement("datalist")
-    data_list_temp.setAttribute("class",c)
-    data_list_temp.setAttribute("id",i)
-
-    for (let j = 0; j < elementos.length; j++) {
-        let option_temp = document.createElement("option")
-        option_temp.setAttribute("value",elementos[j])
-        data_list_temp.appendChild(option_temp)
-    }
-
-    n.appendChild(data_list_temp)
-    return data_list_temp
-}
-
-function mkAlert(texto,color) {
-    let body = document.body
-    body.style.position="relative"
-    console.log(texto)
-
-    let a_text = texto.split("\s")
-    // console.log(a_text)
-    
-    let obj_temp = mkObj(document.body,"h_cap","h_cap_"+a_text[0]);obj_temp.style.position="absolute";obj_temp.style.zIndex=3
-    console.log(obj_temp)
-
-    let pestaña_alert = mkObj(obj_temp,"pestaña_alert","pestaña_alert")
-
-    let contenedor_alerta = mkText(pestaña_alert,"alerta","alerta",texto)
-        let p_alerta = contenedor_alerta.querySelector("p")
-
-    p_alerta.style.color = color
-    p_alerta.style.border = "2px solid "+color
-
-
-        obj_temp.addEventListener("click",function () {
-            obj_temp.remove()
-        })
-
-    return obj_temp
-}
-
-
-// ACTUALIZADO EN -> mkDomer/controlador/bibliotecaPruevas.js
-// gest //FOR//FOR//FOR//FOR//FOR///////////// 
-
-// gest .s5ssSs.  .s5SSSs.  .s5SSSSs. .s    s.  .s5SSSs.  .s5SSSs.  .s5SSSs. .s5SSSs.  .s5SSSs.  .s    s.  .s5SSSs.  .s5SSSs.
-// gest    SS SS.       SS.    SSS          SS.       SS.       SS.                SS.       SS.       SS.       SS.       SS. .s    s.  s.  .s    s.
-// gest sS SS S%S sS    S%S    S%S    sS    S%S sS    `:; sS    S%S sS       sS    S%S sS    `:; sS    S%S sS    `:; sS    S%S       SS. SS.       SS.
-// gest SS :; S%S SS    S%S    S%S    SS    S%S SS        SS    S%S SS       SS    S%S SS        SS    S%S SS        SS    S%S sS    S%S S%S sSs.  S%S
-// gest SS    S%S SS    S%S    S%S    SSSs. S%S SSSs.     SS .sS;:' SSSs.    SS    S%S SS        SSSSs.S:' SSSs.     SS .sS;:' SSSSs.S:' S%S SS `S.S%S
-// gest SS    S%S SS    S%S    S%S    SS    S%S SS        SS    ;,  SS       SS    S%S SS        SS  "SS.  SS        SS    ;,  SS  "SS.  S%S SS  `sS%S
-// gest SS    `:; SS    `:;    `:;    SS    `:; SS        SS    `:; SS       SS    `:; SS        SS    `:; SS        SS    `:; SS    `:; `:; SS    `:;
-// gest SS    ;,. SS    ;,.    ;,.    SS    ;,. SS    ;,. SS    ;,. SS       SS    ;,. SS    ;,. SS    ;,. SS    ;,. SS    ;,. SS    ;,. ;,. SS    ;,.
-// gest :;    ;:' `:;;;;;:'    ;:'    :;    ;:' `:;;;;;:' `:    ;:' :;       `:;;;;;:' `:;;;;;:' :;    ;:' `:;;;;;:' `:    ;:' :;    ;:' ;:' :;    ;:'
-
-// gest /////////////// 
-
-// ? [STYLER] // ? [STYLER] // ? [STYLER] 
-// ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] 
-
-// ? /::::::::  ::::::::::: :::   ::: :::        :::::::::: ::::::::\
-// ? :+:    :+:     :+:     :+:   :+: :+:        :+:        :+:    :+:
-// ? +:+            +:+      +:+ +:+  +:+        +:+        +:+    +:+
-// ? +#++:++#++     +#+       +#++:   +#+        +#++:++#   +#++:++#:
-// ?        +#+     +#+        +#+    +#+        +#+        +#+    +#+
-// ? #+#    #+#     #+#        #+#    #+#        #+#        #+#    #+#
- // ? ########      ###        ###    ########## ########## ###    ###
-
-// ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] // ? [STYLER] 
-
-// gest // gest // gest // gest // gest 
-
-// gest //////////////////////////////////////////////////////////////////
-// gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest 
-
 
 function stylerColor(element,color) {
     element.style.color=color
@@ -689,7 +716,7 @@ function stylerWidth(element,width) {
 
 function stylerHeight(element,height) {
     element.style.height=height
-    console.log(element)
+    // console.log(element)
     return element
 }
 
@@ -734,377 +761,316 @@ function stylerMaxWidth(element,maxWidth) {
     // console.log(element)
     return element
 }
-// actualizado [si] -> pasar a styler
-function stylerPosition(element,position) {
-    element.style.position = position
-    return element
-}
 
-function stylerzIndex(element,zIndex) {
-    element.style.zIndex=zIndex
-    return element
-}
+// // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest 
 
-// gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest // gest 
-
-
-    function mkTextList(n,c,i,...inner) {
-        n = n || "";c = c || "";i = i || "";inner = inner || "";c==""?c_c="":c_c="cont_"+c;i==""?c_i="":c_i="cont_"+i;
-        
-        let obj_temp = div(c_c,c_i)
-        n.appendChild(obj_temp)
+function insertSpan(elemento, textoCoincidente, color) {
+    // Obtener el contenido del elemento <p>
+    var contenido = elemento.innerHTML;
     
-        let p_temp = document.createElement("p")
-        p_temp.setAttribute("class",c)
-        p_temp.setAttribute("id",i)
-        for (let j = 0; j < inner.length; j++) {
-            let element = inner[j];
-            // ! console.log(element)
-            let sub_text = mkText(obj_temp,"sub_text_"+c,"sub_text_"+i+"_"+j,element)
-            // ! console.log(sub_text)
-                
-        }
-        return obj_temp
-    }
-function mkTabla(nodo,clase,id,titulo_tabla,fecha_tabla,url_peticion_solicitar_fila,...columnas) { //NODO, CLASE, ID, TITULO PANEL, FOOTER FANEL
-    nodo?nodo:nodo=""
-    clase?clase:clase=""
-    id?id:id=""
-    titulo_tabla?titulo_tabla:titulo_tabla=""
-    fecha_tabla?fecha_tabla:fecha_tabla=""
-    clase==""?panel_c="":panel_c="panel_"+clase
-    id==""?panel_i="":panel_i="panel_"+id
-    clase==""?h_c="":h_c="header_"+clase
-    id==""?h_i="":h_i="header_"+id
-    clase==""?t_c="":t_c="titulo_"+clase
-    id==""?t_i="":t_i="titulo_"+id
-    clase==""?crp_c="":crp_c="cuerpo_"+clase
-    id==""?crp_i="":crp_i="cuerpo_"+id
-    clase==""?h_crp_c="":h_crp_c="titulo_contenido_"+clase
-    id==""?h_crp_i="":h_crp_i="titulo_contenido_"+id
-    clase==""?col_h_crp_c="":col_h_crp_c="columna_header_"+clase
-    id==""?col_h_crp_i="":col_h_crp_i="columna_header_"+id
-    clase==""?crp_cont_c="":crp_cont_c="cuerpo_contenido_"+clase
-    id==""?crp_cont_i="":crp_cont_i="cuerpo_contenido_"+id
-    clase==""?cont_elementos_c="":cont_elementos_c="cont_elementos_"+clase
-    id==""?cont_elementos_i="":cont_elementos_i="cont_elementos_"+id
-    clase==""?element_crp_cont_c="":element_crp_cont_c="elemento_cuerpo_contenido_"+clase
-    id==""?element_crp_cont_i="":element_crp_cont_i="elemento_cuerpo_contenido_"+id
-    clase==""?col_elementos_crp_cont_c="":col_elementos_crp_cont_c="columna_elemento_cuerpo_contenido_"+clase
-    id==""?col_elementos_crp_cont_i="":col_elementos_crp_cont_i="columna_elemento_cuerpo_contenido_"+id
-
-        //FILA DATOS
-        clase==""?fila_datos_c="":fila_datos_c="fila_datos_"+clase
-        id==""?fila_datos_i="":fila_datos_i="fila_datos_"+id
-            //CELDA FILA DATOS
-            clase==""?cell_fila_datos_c="":cell_fila_datos_c="cell_fila_datos_"+clase
-            id==""?cell_fila_datos_i="":cell_fila_datos_i="cell_fila_datos_"+id
-
-        //FOOTER
-        clase==""?foo_c="":foo_c="footer_"+clase
-        id==""?foo_i="":foo_i="footer_"+id
-            //DESCRIPCION FOOTER
-            clase==""?desc_foo_c="":desc_foo_c="descripcion_footer_"+clase
-            id==""?desc_foo_i="":desc_foo_i="descripcion_footer_"+id
-            //BOTON ADD
-            clase==""?btn_add_c="":btn_add_c="btn_add_"+clase
-            id==""?btn_add_i="":btn_add_i="btn_add_"+id
-                //VENTANA ADD
-                clase==""?cont_vnt_add_c="":cont_vnt_add_c="cont_ventana_add_"+clase
-                id==""?cont_vnt_add_i="":cont_vnt_add_i="cont_ventana_add_"+id
-                    //VENTANA ADD
-                    clase==""?vnt_add_c="":vnt_add_c="ventana_add_"+clase
-                    id==""?vnt_add_i="":vnt_add_i="ventana_add_"+id
-                        //CUERPO VENTANA ADD
-                        clase==""?crp_vnt_add_c="":crp_vnt_add_c="cuerpo_ventana_add_"+clase
-                        id==""?crp_vnt_add_i="":crp_vnt_add_i="cuerpo_ventana_add_"+id
-                        //FOOTER VENTANA ADD
-                        clase==""?foo_vnt_add_c="":foo_vnt_add_c="footer_ventana_add_"+clase
-                        id==""?foo_vnt_add_i="":foo_vnt_add_i="footer_ventana_add_"+id
-                            //BUTTON ENVIAR FORMULARIO
-                            clase==""?btn_env_form_c="":btn_env_form_c="btn_enviar_forumalrio_ventana_add_"+clase
-                            id==""?btn_env_form_i="":btn_env_form_i="btn_enviar_forumalrio_ventana_add_"+id
-                            //BUTTON CERRAR FORMULARIO
-                            clase==""?btn_crr_form_c="":btn_crr_form_c="btn_cerrar_forumalrio_ventana_add_"+clase
-                            id==""?btn_crr_form_i="":btn_crr_form_i="btn_cerrar_forumalrio_ventana_add_"+id
-
-    ////// FILTRO DIAS
-    let expresion_regular_1_invert = /^\d{4}-\d{2}-\d{2}$/;
-    let expresion_regular_2_invert = /^\d{4}\/\d{2}\/\d{2}$/;
-    let expresion_regular_1 = /^\d{2}-\d{2}-\d{4}$/;
-    let expresion_regular_2 = /^\d{2}\/\d{2}\/\d{4}$/;
-    let d, m, y
-    let milisegundos_dia = 24 * 60 * 60 * 1000 //86,400,000
-
-    if (fecha_tabla && (Date.parse(fecha_tabla) && expresion_regular_1_invert.test(fecha_tabla) || expresion_regular_2_invert.test(fecha_tabla))) {
-        if (expresion_regular_1_invert.test(fecha_tabla)) {
-            [y, m, d] = fecha_tabla.split("-").map(Number);
-            }
-        if (expresion_regular_2_invert.test(fecha_tabla)) {
-            [y, m, d] = fecha_tabla.split("/").map(Number);
-        }
-    }
-
-    if (fecha_tabla && (Date.parse(fecha_tabla) && expresion_regular_1.test(fecha_tabla) || expresion_regular_2.test(fecha_tabla))) {
-        if (expresion_regular_1.test(fecha_tabla)) {
-        [d, m, y] = fecha_tabla.split("-").map(Number);
-        }
-        if (expresion_regular_2.test(fecha_tabla)) {
-        [d, m, y] = fecha_tabla.split("/").map(Number);
-        }
-    }
-
-    fecha_ = new Date(y, m - 1, d)
-    fecha_.setUTCHours(0, 0, 0, 0)
-    fecha_ = fecha_.toISOString()
-    // // console.log(fecha_)
-
-    let obj_temp = mkObj(nodo,panel_c,panel_i)
-        obj_temp.setAttribute("id_panel",titulo_tabla.toLowerCase().replace(/[-\s]/g,"_"))
-        let obj_h = mkObj(obj_temp,h_c,h_i)
-            let obj_t = mkText(obj_h,t_c,t_i,titulo_tabla)
-            let obj_btn_img_converter = mkObj(obj_h,"obj_btn_img_converter","obj_btn_img_converter_"+id,"Conversión de formatos a .png")
-
-
-        let obj_crp = mkObj(obj_temp,crp_c,crp_i)
-
-            let obj_h_crp = mkObj(obj_crp,h_crp_c,h_crp_i)
-                //CREAR TITULO DE COLUMNAS
-                for (let j = 0; j < columnas.length; j++) {
-                    let celda_header = mkText(obj_h_crp,"p_"+col_h_crp_c,"p_"+col_h_crp_i+"_"+columnas[j],columnas[j])
-                }
-            let cuerpo_tabla = mkObj(obj_crp,crp_cont_c,crp_cont_i)
-
-            let texto_tabla = mkTextList(cuerpo_tabla,"texto_tabla","texto_tabla",
-                "Realiza análisis detallados de los reportes.",
-                "Genera gráficos y visualizaciones para facilitar la interpretación de datos.",
-                "Implementa medidas de seguridad para proteger la información confidencial.",
-                "Automatiza la generación y envío de reportes periódicos.",
-                "Facilita la colaboración permitiendo el acceso a usuarios autorizados.",
-                "Ofrece funcionalidades de exportación e importación de datos para una mayor flexibilidad.",
-                "Permite la personalización de informes según las necesidades del usuario.",
-            )
-
-                obj_btn_img_converter.addEventListener("mouseup",function() {
-                setTimeout(() => {
-                    html2canvas(obj_temp).then(function (canvas) {
-                        let cont_img_table = mkObj(body,"cont_img_table","cont_img_table"/*,'<img src="' + canvas.toDataURL() + '" />'*/)
-                            body.style.position="relative"
-                            cont_img_table.style.position="absolute"
-                            cont_img_table.scrollIntoView()
-
-                            let ventana_img_table = mkObj(cont_img_table,"ventana_img_table","ventana_img_table")
-                            ventana_img_table.style.flexDirection="column"
-
-                                let header_img_table = mkObj(ventana_img_table,"header_img_table","header_img_table_"+id)
-                                    let btn_cerrar_img_table = mkObjImg(header_img_table,"btn_cerrar_img_table","btn_cerrar_img_table","./vista/img/close.png")
-                                    btn_cerrar_img_table.addEventListener("mouseup",function () {
-                                        cont_img_table.remove()
-                                    })
-
-                                let cuerpo_img_table = mkObj(ventana_img_table,"cuerpo_img_table","cuerpo_img_table_"+id)
-                                    let img_table = mkObjImg(cuerpo_img_table,"img_table","img_table",canvas.toDataURL())
-
-                    })
-                }, 585);
-
-
-            })
-
-
-            return obj_temp
-}
+    // Crear una expresión regular para buscar el texto coincidente de manera global e insensible a mayúsculas/minúsculas
+    var regex = new RegExp(textoCoincidente, 'gi');
     
+    // Reemplazar el texto coincidente con el span resaltado
+    var nuevoContenido = contenido.replace(regex, function(match) {
+        return '<span class="resaltado" style="color: ' + color + ';font-weight: bold;">' + match + '</span>';
+    });
+    
+    // Establecer el nuevo contenido en el elemento <p>
+    elemento.innerHTML = nuevoContenido;
+}
 
-function mkAgenda(nodo, clase, id, titulo, fecha, ...filas) { // nodo clase id titulo fecha filas
-    nodo = nodo || "";
-    clase = clase || "";
-    id = id || "";
-    titulo = titulo || "";
-    fecha = fecha || "";
-    filas = filas || [];
+function etiquetaElemento(nodo,clase,id,titulo,img_ruta,descripcion) {
+    nodo?true:"";clase?true:"";id?true:"";titulo?true:"";img_ruta?true:"";descripcion?true:"";
 
-    let days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    let obj_temp = mkObj(nodo,"cont_"+""+clase,"cont_"+""+id)
+    obj_temp.style.flexDirection="column"
 
-    let expresion_regular_1 = /^\d{2}-\d{2}-\d{4}$/;
-    let expresion_regular_2 = /^\d{2}\/\d{2}\/\d{4}$/;
-    let fecha_;
-    let dia_;
-    let dias_transcurridos;
-    let lunes;
+        let header_temp = mkObj(obj_temp,"header_"+clase,"header_"+id)
+            let header_temp_titulo = mkText(header_temp,"header_temp_titulo"+clase,"header_temp_titulo"+id,titulo)
 
-    let milisegundos_dia = 24 * 60 * 60 * 1000 //86,400,000
+        let cuerpo_temp = mkObj(obj_temp,"cuerpo_"+clase,"cuerpo_"+id)
+            let cuerpo_temp_imagen = mkObjImg(cuerpo_temp,"cuerpo_temp_imagen"+clase,"cuerpo_temp_imagen"+id,img_ruta)
 
-    let dates = []
+        let footer_temp = mkObj(obj_temp,"footer_"+clase,"footer_"+id)
+            let footer_temp_descripcion = mkText(footer_temp,"footer_temp_descripcion"+clase,"footer_temp_descripcion"+id,descripcion)
 
-    if (fecha && (Date.parse(fecha) || expresion_regular_1.test(fecha) || expresion_regular_2.test(fecha))) {
-        if (expresion_regular_1.test(fecha)) {
-        let [d, m, y] = fecha.split("-").map(Number);
-        fecha_ = new Date(y, m - 1, d);
-        } else if (expresion_regular_2.test(fecha)) {
-        let [d, m, y] = fecha.split("/").map(Number);
-        fecha_ = new Date(y, m - 1, d);
-        } else {
-            fecha_=new Date(fecha)
-        }
-        console.log("fecha: "+fecha_)
-        dia_ = fecha_.getDay();
-        // console.log("dia: "+dia_)
-        dias_transcurridos = dia_ === 0 ? 6 : dia_;
-        //fechas
-        lunes = new Date(fecha_.getTime() - (dias_transcurridos * milisegundos_dia) + milisegundos_dia);
-        // console.log("lunes: "+lunes)
-        martes = new Date(lunes.getTime() + milisegundos_dia);
-        // console.log("martes: "+martes)
-        miercoles = new Date(martes.getTime() + milisegundos_dia);
-        // console.log("miercoles: "+miercoles)
-        jueves = new Date(miercoles.getTime() + milisegundos_dia);
-        // console.log("jueves: "+jueves)
-        viernes = new Date(jueves.getTime() + milisegundos_dia);
-        // console.log("viernes: "+viernes)
-        sabado = new Date(viernes.getTime() + milisegundos_dia);
-        // console.log("sabado: "+sabado)
-        domingo = new Date(sabado.getTime() + milisegundos_dia);
-        // console.log("domingo: "+domingo)
+    obj_temp.addEventListener("mouseup",function () {
+        let hc = document.querySelectorAll(".hipercapa_")
+        if (hc) {hc.forEach(element => {
+            element.remove()
+    });}
 
-        lunes.setUTCHours(0, 0, 0, 0)
-        // console.log(lunes)
-        martes.setUTCHours(0, 0, 0, 0)
-        // console.log(martes)
-        miercoles.setUTCHours(0, 0, 0, 0)
-        // console.log(miercoles)
-        jueves.setUTCHours(0, 0, 0, 0)
-        // console.log(jueves)
-        viernes.setUTCHours(0, 0, 0, 0)
-        // console.log(viernes)
-        sabado.setUTCHours(0, 0, 0, 0)
-        // console.log(sabado)
-        domingo.setUTCHours(0, 0, 0, 0)
-        // console.log(domingo)
+        let hipercapa_temp = mkObj(contenedor_principal,"hipercapa_"+clase,"hipercapa_"+id)
+        hipercapa_temp.style.position="absolute"
+        hipercapa_temp.style.zIndex="255"
 
-        lunes = lunes.toISOString()
-        // console.log("lunes: "+lunes)
-        martes = martes.toISOString()
-        // console.log("martes: "+martes)
-        miercoles = miercoles.toISOString()
-        // console.log("miercoles: "+miercoles)
-        jueves = jueves.toISOString()
-        // console.log("jueves: "+jueves)
-        viernes = viernes.toISOString()
-        // console.log("viernes: "+viernes)
-        sabado = sabado.toISOString()
-        // console.log("sabado: "+sabado)
-        domingo = domingo.toISOString()
-        // console.log("domingo: "+domingo)
-        ////
-        // fecha_.setUTCHours(0, 0, 0, 0)
-        // fecha = fecha_.toISOString()
-    } else {
-        console.error("Formato de fecha incorrecto, revisa el formato: " + fecha)
-        return
-    }
-
-    dates.push(lunes,martes,miercoles,jueves,viernes,sabado,domingo)
-    let meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+                        var nuevaURL = window.location.href.replace('&actividades', '');
 
 
-    // console.log("arreglo dias: "+dates)
+            let ventana_descripcion_actividad = mkObj(hipercapa_temp,"ventana_descripcion_actividad","ventana_descripcion_actividad_"+id)
 
-    let obj_principal = mkObj(nodo,clase,id)
-    // obj_principal.style.flexDirection="column" // nota [ transponerCalendario ]
-    // console.log(obj_principal)
+                let ventana_descripcion_actividad_header = mkObj(ventana_descripcion_actividad,"ventana_descripcion_actividad_header","ventana_descripcion_actividad_header"+id)
+                    let ventana_descripcion_actividad_header_titulo = mkText(ventana_descripcion_actividad_header,"ventana_descripcion_actividad_header_titulo","ventana_descripcion_actividad_header_titulo"+id,"Información de Actividades "+titulo)
+                    let ventana_descripcion_actividad_header_cerrar = mkObjImg(ventana_descripcion_actividad_header,"ventana_descripcion_actividad_header_cerrar","ventana_descripcion_actividad_header_cerrar"+id,"./vista/img/cerrar_ventana.png")
+                        ventana_descripcion_actividad_header_cerrar.addEventListener("mouseup",function () {
+                            hipercapa_temp.remove()
+                            
+                            // Crear una nueva URL eliminando '&actividades'
+                            // var nuevaURL = window.location.href.replace('&actividades', '');
 
-    for (let i = 0; i < filas.length + 1; i++) {
-        let fila_j = div(clase + "_fila", id + "_fila_" + filas[i-1]);
-        fila_j.setAttribute("date", fecha);
-        obj_principal.appendChild(fila_j);
-
-        for (let i2 = 0; i2 < days.length + 1; i2++) {
-        let celda_calendario = div(clase + "_celda_calendario", id + "_celda_calendario_" + days[i2 - 1] + "_fila_" + filas[i - 1]+"_columna_"+days[i2-1]);
-        if (i === 0 && i2 === 0) {  // NOTA ---::>> ESQUINA
-
-            let titulo_table_celda_calendario = mkText(celda_calendario,"p_celda_calendario_titulo_"+clase,"p_celda_calendario_titulo_"+id,titulo+"<br>"+meses[fecha_.getMonth()])
-            celda_calendario.setAttribute("class", clase + "_celda_calendario_titulo_table");
-            celda_calendario.setAttribute("id", id + "_celda_calendario_titulo_table");
-
-        } else if (i === 0 && i2 > 0) { //HEADER
-            // console.log(i2)
-            let dateCalendario = dates[i2-1].replace(/T00:00:00.000Z/,"")
-            let [año,mes,dia]=dateCalendario.split("-")
-            // console.log([año,mes,dia])
-            dateCalendario=dia+" - "+meses[parseInt(mes-1)]
-            let head_table_celda_calendario = mkText(celda_calendario,"p_celda_calendario_head_"+clase,"p_celda_calendario_head_"+id,days[i2-1]+"<br>"+dateCalendario)
-            celda_calendario.setAttribute("class", clase + "_celda_calendario_day");
-            celda_calendario.setAttribute("id", id + "_day_table" + "_celda_calendario_" + days[i2 - 1] + "_" + i2);
-
-        } else if (i > 0 && i2 === 0) { // ! COLUMNA MAIN
-            let celda_elemento_fila = mkText(celda_calendario,"p_celda_elemento_fila_"+clase,"p_columna_main_"+id,filas[i-1])
-            
-            celda_calendario.setAttribute("class", clase + "_celda_calendario_titulo_fila");
-            celda_calendario.setAttribute("id", id + "_celda_calendario_titulo_fila_main" + filas[i-1] + "_columna_main");
-        } else {               
-            
-            // ! CONTENIDO TABLA
-            celda_calendario.setAttribute("date",dates[i2-1])
-            celda_calendario.setAttribute("id","celda_calendario_fila_"+filas[i-1]+"_columna_"+days[i2-1])
-            celda_calendario.setAttribute("fila_name",filas[i - 1])
-            //obj_calendario_celda_calendario
-
-            celda_calendario.addEventListener("click",(x)=>{
-
-                date_celda_calendario = fila_j.getAttribute("date")
-                fila_name_celda_calendario = celda_calendario.getAttribute("fila_name")
-
-                // console.log(celda_calendario)
-
-                let ventana_update_celda_calendario = mkObj(body,"ventana_update_celda_calendario_"+clase,"ventana_update_celda_calendario_"+id)
-                    if (document.getElementById("contenedor_update_celda"+id)) {
-                        document.getElementById("contenedor_update_celda"+id).remove()
-                    }
-                    
-                    let contenedor_update_celda = mkObj(ventana_update_celda_calendario,"contenedor_update_celda","contenedor_update_celda"+id)
-
-                        let btn_cerrar_ventana_update_celda_calendario = mkObjImg(contenedor_update_celda,"btn_cerrar_ventana_update_celda_calendario","btn_cerrar_ventana_update_celda_calendario","./vista/img/close.png")
-                            btn_cerrar_ventana_update_celda_calendario.addEventListener("mouseup",function () {
-                                ventana_update_celda_calendario.remove()
-                            })
-                        let input_update_celda_calendario = mkObjTextarea(contenedor_update_celda,"input_update_celda_calendario_"+clase,"input_update_celda_calendario_"+id,"Agenda y actualiza información de tu empresa: "+fila_name_celda_calendario+" - "+date_celda_calendario)
-                        let btn_actualizar_celda_calendario = mkObjButton(contenedor_update_celda,"btn_actualizar_celda_calendario","btn_actualizar_celda_calendario","Actualizar Información")
-                        console.log(btn_actualizar_celda_calendario)
-
-                        btn_actualizar_celda_calendario.querySelector("button").addEventListener("click",function () {
-                            ventana_update_celda_calendario.remove()
-                            console.log(btn_actualizar_celda_calendario)
-                            celda_calendario.innerText=input_update_celda_calendario.querySelector("textarea").value
-
+                            // Cambiar la URL y el título sin recargar la página
+                            history.pushState({}, document.title, nuevaURL);
+                            
+                            // history.back()
                         })
 
-                        input_update_celda_calendario.querySelector("textarea").focus()
+                let ventana_descripcion_actividad_cuerpo = mkObj(ventana_descripcion_actividad,"ventana_descripcion_actividad_cuerpo","ventana_descripcion_actividad_cuerpo"+id)
+                    let ventana_descripcion_actividad_cuerpo_fila_producto = mkObj(ventana_descripcion_actividad_cuerpo,"ventana_descripcion_actividad_cuerpo_fila","ventana_descripcion_actividad_cuerpo_fila_"+id)
+
+                        let ventana_descripcion_actividad_cuerpo_fila_img = mkObjImg(ventana_descripcion_actividad_cuerpo_fila_producto,"ventana_descripcion_actividad_cuerpo_fila_img","ventana_descripcion_actividad_cuerpo_fila_img"+id,img_ruta)
+
+                let ventana_descripcion_actividad_footer = mkObj(ventana_descripcion_actividad,"ventana_descripcion_actividad_footer","ventana_descripcion_actividad_footer"+id)
+                    let ventana_descripcion_actividad_footer_contactos = mkTextList(ventana_descripcion_actividad_footer,"ventana_descripcion_actividad_footer_contactos","ventana_descripcion_actividad_footer_contactos"+id,
+                        "Solicitar más informes por WhatsApp: 81 3101 0497 (click)",
+                    )
+                        ventana_descripcion_actividad_footer_contactos.addEventListener("mouseup",function () {
+                            mandarMensajeWhats("8131010497","Informes acerca de "+titulo)
+                        })
 
 
+                function mandarMensajeWhats(phone,text) {
+                    text = text.replace(/[\s]/g,"%20")
+                    url = "https://wa.me/"
+                    window.open(url+phone+"?text=[Mensaje automático de Portafolio]: "+text)
+                }
 
-                            document.addEventListener("mouseup",function (element) {
-                                if (!contenedor_update_celda.contains(element.target)) {
-                                    ventana_update_celda_calendario.remove()
-                                }
-                            })
-                            document.addEventListener("keypress",function (element) {
-                                if (element.code==="Delete") {
-                                    ventana_update_celda_calendario.remove()
-                                }
-                            })
+                // Agregar evento para manipular el historial al cerrar la ventana
+                window.addEventListener("popstate", function () {
+                    if (hipercapa_temp) {
+                        hipercapa_temp.remove();
+                        // Crear una nueva URL eliminando '&actividades'
+                        // var nuevaURL = window.location.href.replace('&actividades', '');
 
-            })
+                        // Cambiar la URL y el título sin recargar la página
+                        history.pushState({}, document.title, nuevaURL);
+                        
+                    }
+                });
 
-        }
-        fila_j.appendChild(celda_calendario);
+                // Modificar el historial al abrir la ventana
+                history.pushState({ action: "open" }, null, "&actividades"); // Puedes personalizar la URL según tu necesidad
 
+    })
 
-      }
-    }
-
-    return obj_principal
+    return obj_temp
 }
+
+                // TODO CALENDARIO
+
+                function mkCalendario(n, c, i, t, input_fecha, ...filas) { // nodo clase id titulo fecha filas
+                    n = n || "";c = c || "";i = i || "";t = t || "";input_fecha = input_fecha || "";
+                    filas = filas || [];
+
+                    let array_dias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+
+                    let expresion_regular_1 = /^\d{2}-\d{2}-\d{4}$/; // dd-mm-aa
+                    let expresion_regular_2 = /^\d{2}\/\d{2}\/\d{4}$/; // dd/mm/aa
+                    let fecha_;let dia_;let dias_transcurridos;let lunes;let dates = [];
+
+                    let milisegundos_dia = 24 * 60 * 60 * 1000 //86,400,000 milisegundos por dia
+
+                    if (
+                            input_fecha && 
+                            (Date.parse(input_fecha) || 
+                            expresion_regular_1.test(input_fecha) || 
+                            expresion_regular_2.test(input_fecha))
+                            
+                        ) {
+
+                        function mkFormatoInputFechaCalendario() {
+                            if (expresion_regular_1.test(input_fecha)) {
+                                let [d, m, y] = input_fecha.split("-").map(Number);
+                                fecha_ = new Date(y, m - 1, d);
+
+                            } else if (expresion_regular_2.test(input_fecha)) {
+                                let [d, m, y] = input_fecha.split("/").map(Number);
+                                fecha_ = new Date(y, m - 1, d);
+
+                            } else {
+                                fecha_=new Date(input_fecha)
+                            }    
+                        }
+                        mkFormatoInputFechaCalendario()
+
+                        
+                        console.log("fecha: "+fecha_)
+
+                        function mkFormatoIsoString() {
+                            dia_ = fecha_.getDay()+1;
+                            dias_transcurridos = dia_ === 0 ? 6 : dia_
+                            lunes = new Date(fecha_.getTime() - (dias_transcurridos * milisegundos_dia) + milisegundos_dia);
+                            martes = new Date(lunes.getTime() + milisegundos_dia)
+                            miercoles = new Date(martes.getTime() + milisegundos_dia)
+                            jueves = new Date(miercoles.getTime() + milisegundos_dia)
+                            viernes = new Date(jueves.getTime() + milisegundos_dia)
+                            sabado = new Date(viernes.getTime() + milisegundos_dia)
+                            domingo = new Date(sabado.getTime() + milisegundos_dia)
+                    
+                            lunes.setUTCHours(0, 0, 0, 0)
+                            martes.setUTCHours(0, 0, 0, 0)
+                            miercoles.setUTCHours(0, 0, 0, 0)
+                            jueves.setUTCHours(0, 0, 0, 0)
+                            viernes.setUTCHours(0, 0, 0, 0)
+                            sabado.setUTCHours(0, 0, 0, 0)
+                            domingo.setUTCHours(0, 0, 0, 0)
+                    
+                            lunes = lunes.toISOString()
+                            martes = martes.toISOString()
+                            miercoles = miercoles.toISOString()
+                            jueves = jueves.toISOString()
+                            viernes = viernes.toISOString()
+                            sabado = sabado.toISOString()
+                            domingo = domingo.toISOString()
+                        }
+
+                        mkFormatoIsoString()
+
+                    } else {
+                        console.error("Formato de fecha incorrecto, revisa el formato: " + input_fecha)
+                        return
+                    }
+
+                    dates.push(lunes,martes,miercoles,jueves,viernes,sabado,domingo)
+                    let meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+                    let obj_temp = mkObj(n,c,i)
+                        obj_temp.style.flexDirection="column"
+
+                    for (let j = 0; j < filas.length + 1; j++) {
+                        let element_j = filas[j]
+                        let fila_calendario = div(c + "_fila", i + "_fila_" + filas[j-1]);
+                        fila_calendario.setAttribute("date", input_fecha);
+                        obj_temp.appendChild(fila_calendario);
+
+                        for (let j_ = 0; j_ < array_dias.length + 1; j_++) {
+                            let element_day = array_dias[j_]
+
+                            let celda_calendario = div(c + "_celda", i + "_celda_" + array_dias[j_ - 1] + "_fila_" + filas[j - 1]+"_columna_"+array_dias[j_-1]);
+                            if (j === 0 && j_ === 0) {  //ESQUINA
+                                let p_titulo_table_celda_calendario = mkText(celda_calendario,"p_celda_titulo_"+c,"p_celda_titulo_"+i,t+"<br>"+meses[fecha_.getMonth()])
+                                celda_calendario.setAttribute("class", c + "_celda_titulo_table");
+                                celda_calendario.setAttribute("id", i + "_celda_titulo_table_");
+                    
+                            } else if (j === 0 && j_ > 0) { //HEADER
+                                let dateCalendario = dates[j_-1].replace(/T00:00:00.000Z/,"")//;console.log(dateCalendario)
+                                let [año,mes,dia]=dateCalendario.split("-")
+                                dateCalendario=dia+" - "+meses[parseInt(mes-1)]
+                                let p_head_table_celda_calendario = mkText(celda_calendario,"p_celda_head_"+c,"p_celda_head_"+i,array_dias[j_-1]+"<br>"+dateCalendario)
+                                celda_calendario.setAttribute("class", c + "_celda_day");
+                                celda_calendario.setAttribute("id", i + "_day_table" + "_celda_" + array_dias[j_ - 1] + "_" + j_);
+                    
+                            } else if (j > 0 && j_ === 0) { //COLUMNA PRINCIPAL
+                                let p_columna_main_table_celda_calendario = mkText(celda_calendario,"p_columna_main_"+c,"p_columna_main_"+i,filas[j-1])
+                                celda_calendario.setAttribute("class", c + "_celda_titulo_fila");
+                                celda_calendario.setAttribute("id", i + "_celda_titulo_fila_main" + filas[j-1] + "_columna_main");
+                            } else {                        //CONTENIDO TABLA
+                                celda_calendario.setAttribute("date",dates[j_-1])
+                                celda_calendario.setAttribute("id","cell_fila_"+filas[j-1]+"_columna_"+array_dias[j_-1])
+                                celda_calendario.setAttribute("fila_name",filas[j - 1])
+                    
+                                peticionCategoriaFecha(celda_calendario,"./modelo/solicitudCeldaCalendario.php")
+
+                                function peticionCategoriaFecha(obj,dir) {
+                                    let ot_c = obj.getAttribute("class")
+                                    let ot_i = obj.getAttribute("id")
+                                    let ot_date = obj.getAttribute("date")
+                                    let ot_r_name = obj.getAttribute("fila_name")
+                                
+                                    let formData = new FormData()
+                                    formData.append("categoria",ot_r_name)
+                                    formData.append("fecha",ot_date)
+                                
+                                    let peticionCellCalendario = new XMLHttpRequest()
+                                    peticionCellCalendario.open("POST",dir)
+                                    peticionCellCalendario.send(formData)
+                                    peticionCellCalendario.onreadystatechange=function() {
+                                        if (peticionCellCalendario.readyState==4&&peticionCellCalendario.status==200) {
+                                            let res = peticionCellCalendario.response
+                                            console.log(res)
+                                            let obj_text = mkText(obj,"p_"+ot_c,"p_"+ot_i,res)
+                                        }
+                                    }
+                                }
+                                // celda_calendario.innerHTML="Registro dinámico"
+                                let obj_text = mkText(celda_calendario,"p_","p_","Registro en bases de datos")
+
+                    
+                                celda_calendario.addEventListener("click",(x)=>{
+
+                                let ventana_update_celda = mkObj(obj_temp,"ventana_update_celda_"+c,"ventana_update_celda_"+i)
+                                    ventana_update_celda.innerHTML=""
+                                    let header_update_celda = mkObj(ventana_update_celda,"header_update_celda","header_update_celda")
+                                        let header_update_celda_titulo = mkText(header_update_celda,"header_update_celda_titulo","header_update_celda_titulo","Editar: "+celda_calendario.getAttribute("fila_name")+" | "+celda_calendario.getAttribute("date").replace("T00:00:00.000Z",""))
+                                        let cerrar_ventana = mkObjImg(header_update_celda,"cerrar_ventana","cerrar_ventana","./vista/img/cerrar_ventana.png")
+                                            cerrar_ventana.addEventListener("mouseup",function () {
+                                                ventana_update_celda.remove()
+                                            })
+                                    let input_update_celda_titulo = mkObjTextarea(ventana_update_celda,"input_update_celda_"+c,"input_update_celda_titulo"+i,"Actualizar Celda")
+                                    let input_update_celda_descripcion = mkObjTextarea(ventana_update_celda,"input_update_celda_"+c,"input_update_celda_descripcion"+i,"Actualizar Descripción")
+                                    let btn_update_celda = mkObjButton(ventana_update_celda,"btn_update_celda","btn_update_celda","Actualizar Información")
+
+
+                                    input_update_celda_titulo.querySelector("textarea").value = (celda_calendario.querySelector("p").innerHTML).replace(/<br>/g, '');
+                                    input_update_celda_titulo.querySelector("textarea").focus()
+
+                                        btn_update_celda.addEventListener("click",function () {
+                                            let in_update_celda_titulo = input_update_celda_titulo.querySelector("textarea")
+                                            let in_update_celda_descripcion = input_update_celda_descripcion.querySelector("textarea")
+
+                                            let p_celda = celda_calendario.querySelector("p")
+                                            console.log(p_celda)
+                                            p_celda.innerHTML = input_update_celda_descripcion.value
+
+                    
+                                                // console.log(in_update_celda.value)
+
+                                                let formData = new FormData()
+                                                formData.append("titulo",encodeURIComponent(in_update_celda_titulo.value))
+                                                formData.append("descripcion",encodeURIComponent(in_update_celda_descripcion.value))
+                                                formData.append("categoria",celda_calendario.getAttribute("fila_name"))
+                                                formData.append("fecha",celda_calendario.getAttribute("date"))
+                    
+                                                let peticion = new XMLHttpRequest()
+                                                peticion.open("POST","./modelo/actualizarCeldaCalendario.php")
+                                                peticion.send(formData)
+                                                peticion.onreadystatechange=function() {
+                                                    if (peticion.readyState==4&&peticion.status==200) {
+                                                        let res = peticion.response
+                                                        console.log(res)
+                                                        if (verificarPeticion(res)) {
+                                                            celda_calendario.innerHTML=""
+                                                            peticionCategoriaFecha(celda_calendario,"./modelo/solicitudCeldaCalendario.php")
+                                                            ventana_update_celda.remove()
+                                                            celda_calendario.scrollIntoView()
+                                                        } else {
+                                                            console.log(res)
+                                                        }
+                                                    }
+                                                }
+
+                                        })
+
+                            })
+                        }
+                        fila_calendario.appendChild(celda_calendario);
+
+
+                    }
+                    }
+                    console.log(obj_temp)
+                    return obj_temp
+                }
 
 function mkCarrusel(nodo,clase,id,...url_imagenes) {
     nodo = nodo || "";
@@ -1117,6 +1083,7 @@ function mkCarrusel(nodo,clase,id,...url_imagenes) {
 
         let contenedor_imagenes = mkObj(carrusel,"contenedor_imagenes_"+clase,"contenedor_imagenes_"+id)
             url_imagenes.forEach(url => {
+                console.log(url)
                 let formato = url.split(".")[1]
                 console.log(formato)
                 if (formato==="png"||formato==="svg") {
@@ -1124,7 +1091,6 @@ function mkCarrusel(nodo,clase,id,...url_imagenes) {
                 }
                 if (formato==="mp4") {
                     let video = mkObjVideoLoop(contenedor_imagenes,"img_carrusel_"+clase,"img_carrusel_"+id,url)
-                    
                 }
             });
 
@@ -1135,26 +1101,71 @@ function mkCarrusel(nodo,clase,id,...url_imagenes) {
             let btn_control_carrusel_siguiente = mkObjButton(contenedor_controles,"btn_control_carrusel_"+clase,"btn_control_carrusel_siguiente_"+id,">")
             btn_control_carrusel_siguiente.style.justifyContent="end"
 
-            btn_control_carrusel_anterior.addEventListener('click', () => cambiarImagen(-1));
-            btn_control_carrusel_siguiente.addEventListener('click', () => cambiarImagen(1));
+            let imagenActual = 1;
+            let numero_imagenes = url_imagenes.length
+            let intervaloCarrusel;
 
-    let imagenActual = 1;
-    let numero_imagenes = url_imagenes.length
 
-    function cambiarImagen(direccion) {
-        imagenActual += direccion;
+            function cambiarImagen(direccion) {
+                imagenActual += direccion;
 
-        // Ajustar la imagen actual si se llega al límite
-        if (imagenActual > numero_imagenes) {
-            imagenActual = 1;
-        } else if (imagenActual < 1) {
-            imagenActual = numero_imagenes;
-        }
+                // Ajustar la imagen actual si se llega al límite
+                if (imagenActual > numero_imagenes) {
+                    imagenActual = 1;
+                } else if (imagenActual < 1) {
+                    imagenActual = numero_imagenes;
+                }
 
-        // Calcular la posición de la transformación
-        let posicionTransform = -100 * (imagenActual - 1);
-        contenedor_imagenes.style.transform = `translateX(${posicionTransform}%)`;
+                // Calcular la posición de la transformación
+                let posicionTransform = -100 * (imagenActual - 1);
+                contenedor_imagenes.style.transform = `translateX(${posicionTransform}%)`;
+            }
+
+            function iniciarIntervalo() {
+                intervaloCarrusel = setInterval(() => cambiarImagen(1), 6000);
+            }
+
+            btn_control_carrusel_anterior.addEventListener('click', function () {
+                cambiarImagen(-1);
+                // clearInterval(intervaloCarrusel); // Detener el intervalo al hacer clic
+                // iniciarIntervalo(); // Volver a iniciar el intervalo después de cambiar la imagen manualmente
+            })
+            btn_control_carrusel_siguiente.addEventListener('click', function () {
+                cambiarImagen(1);
+                // clearInterval(intervaloCarrusel); // Detener el intervalo al hacer clic
+                // iniciarIntervalo(); // Volver a iniciar el intervalo después de cambiar la imagen manualmente
+            })
+}
+function displayScroll(parentContainer) {
+    var elements = Array.from(parentContainer.children);
+    console.log(elements);
+
+    elements.forEach(element => {
+        element.style.transition = "opacity 1s";
+        element.style.opacity = "0"; // Establecer la opacidad inicial en 0
+    });
+
+    function isElementInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.bottom >= 0
+        );
     }
 
-    setInterval(() => cambiarImagen(1), 6000);
+    function checkVisibility() {
+        elements.forEach(function (element) {
+            if (isElementInViewport(element)) {
+                element.style.opacity = "1"; // Cambiar la opacidad a 1 si está en la vista
+            } else {
+                element.style.opacity = "0"; // Cambiar la opacidad a 0 si está fuera de la vista
+            }
+        });
+    }
+
+    // Agregar evento de desplazamiento al contenedor
+    parentContainer.addEventListener('scroll', checkVisibility);
+
+    // Llamar a la función inicialmente para verificar elementos visibles al cargar la página
+    checkVisibility();
 }
