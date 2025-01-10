@@ -1,4 +1,4 @@
-# Extensiones Personalizadas para el Prototipo de `HTMLElement`
+# Documentación de Extensiones Personalizadas. Libreria *mkDom.js*
 
 Este proyecto extiende el prototipo nativo de `HTMLElement` para agregar métodos útiles que simplifican tareas comunes en la manipulación del DOM. Las funciones incluidas abarcan desde animaciones hasta la gestión de eventos y estilos dinámicos.
 
