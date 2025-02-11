@@ -111,7 +111,7 @@ Las contribuciones son bienvenidas. Si deseas agregar más métodos o mejorar lo
 ---
 
 ## Licencia
-Este proyecto es de dominio público. Puedes usarlo y modificarlo libremente.
+Este proyecto es originalmente creado por mi y está abierto al público. Puedes usarlo y modificarlo libremente, no olvides mencionar la fuente ya que es de gran ayuda para mi como desarrollador.
 
 
 
